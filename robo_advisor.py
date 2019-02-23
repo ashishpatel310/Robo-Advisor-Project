@@ -20,7 +20,10 @@ parsed_response = json.loads(response.text)
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 now = datetime.datetime.now()
 
-latest_close = parsed_response["Time Series (Daily)"]["2019-02-20"]["4. close"]
+tsd = parsed_response["Time Series (Daily)"]
+dates = list(tsd.keys()) #assume last day is first in list of dates
+latest_day = dates[0] 
+latest_close = parsed_response["Time Series (Daily)"][latest_day]["4. close"]
 
 load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
 
