@@ -12,6 +12,8 @@ def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
 
 ticker_input = input('Please enter a valid Stock Symbol(ex. AMZN): ')
+
+
 symbol = ticker_input
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
@@ -65,17 +67,27 @@ with open(csv_file_path, "w") as csv_file:
             "volume": daily_prices["5. volume"],
         })
 
-print("-----------------")
+
+
+
+
+print("----------------------------------")
 print(f"STOCK SYMBOL: {symbol}")
 print("RUN AT: " +now.strftime("%Y-%m-%d %H:%M:%S"))
-print("-----------------")
+print("----------------------------------")
 print(f"LATEST UPDATE: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
-print("-----------------")
-print("RECOMMENDATION: Buy!")
-print("RECOMMENDATION REASON: Because the latest closing price is within threshold XYZ etc., etc. and this fits within your risk tolerance etc., etc.")
-print("-----------------")
+print("----------------------------------")
+
+threshold = 1.2*float(recent_low)
+if float(latest_close) < threshold:
+    print("RECOMMENDATION: BUY!")
+    print("RECOMMENDATION REASON: The latest closing price is not larger than 20 percent of the recent low")
+else:
+    print("RECOMMENDATION: DONT BUY!")
+    print("RECOMMENDATION REASON: The latest closing price is larger than 20 percent of the recent low")
+print("----------------------------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}...")
 
