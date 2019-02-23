@@ -3,6 +3,7 @@ import json
 import os
 import requests
 import datetime
+import statistics
 
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
@@ -23,7 +24,15 @@ now = datetime.datetime.now()
 tsd = parsed_response["Time Series (Daily)"]
 dates = list(tsd.keys()) #assume last day is first in list of dates
 latest_day = dates[0] 
-latest_close = parsed_response["Time Series (Daily)"][latest_day]["4. close"]
+latest_close = tsd[latest_day]["4. close"]
+
+high_prices = []
+
+for date in dates:
+    high_price = tsd[date]["2. high"]
+    high_prices.append(float(high_price))
+
+recent_high = max(high_prices)
 
 load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
 
@@ -48,7 +57,7 @@ print("RUN AT: " +now.strftime("%Y-%m-%d %H:%M:%S"))
 print("-----------------")
 print(f"LATEST UPDATE: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
-print("RECENT HIGH: $101,000.00")
+print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print("RECENT LOW: $99,000.00")
 print("-----------------")
 print("RECOMMENDATION: Buy!")
