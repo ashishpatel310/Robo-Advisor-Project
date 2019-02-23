@@ -11,7 +11,8 @@ load_dotenv()
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
 
-symbol = "AMZN" #add user input
+ticker_input = input('Please enter a valid Stock Symbol(ex. AMZN): ')
+symbol = ticker_input
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
 
@@ -77,5 +78,4 @@ print("RECOMMENDATION: Buy!")
 print("RECOMMENDATION REASON: Because the latest closing price is within threshold XYZ etc., etc. and this fits within your risk tolerance etc., etc.")
 print("-----------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}...")
-
 
