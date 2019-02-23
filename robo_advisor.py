@@ -4,6 +4,7 @@ import os
 import requests
 import datetime
 import statistics
+import csv
 
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
@@ -55,6 +56,19 @@ latest_price_usd = "$100,000.00"
 # INFO OUTPUTS
 #
 
+#csv_file_path = "data/prices.csv"
+
+csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
+
+with open(csv_file_path, "w") as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=["city", "name"])
+    writer.writeheader() # uses fieldnames set above
+    writer.writerow({"city": "New York", "name": "Yankees"})
+    writer.writerow({"city": "New York", "name": "Mets"})
+    writer.writerow({"city": "Boston", "name": "Red Sox"})
+    writer.writerow({"city": "New Haven", "name": "Ravens"})
+
+
 print("-----------------")
 print(f"STOCK SYMBOL: {symbol}")
 print("RUN AT: " +now.strftime("%Y-%m-%d %H:%M:%S"))
@@ -67,3 +81,5 @@ print("-----------------")
 print("RECOMMENDATION: Buy!")
 print("RECOMMENDATION REASON: Because the latest closing price is within threshold XYZ etc., etc. and this fits within your risk tolerance etc., etc.")
 print("-----------------")
+print(f"WRITING DATA TO CSV: {csv_file_path}...")
+
