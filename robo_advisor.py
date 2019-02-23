@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import json
 import os
 import requests
+import datetime
 
 
 request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo"
@@ -14,6 +15,8 @@ response = requests.get(request_url)
 parsed_response = json.loads(response.text)
 
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+now = datetime.datetime.now()
+
 
 
 load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
@@ -43,7 +46,7 @@ latest_price_usd = "$100,000.00"
 # TODO: further revise the example outputs below to reflect real information
 print("-----------------")
 print(f"STOCK SYMBOL: {symbol}")
-print("RUN AT: 11:52pm on June 5th, 2018")
+print("RUN AT: " +now.strftime("%Y-%m-%d %H:%M:%S"))
 print("-----------------")
 print(f"LATEST UPDATE: {last_refreshed}")
 print(f"LATEST DAILY CLOSING PRICE: {latest_price_usd}")
