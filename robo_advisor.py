@@ -3,6 +3,15 @@ import json
 import os
 import requests
 
+
+request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo"
+
+response = requests.get(request_url)
+print(type(response))
+print(response.status_code)
+print(response.text)
+
+
 load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
 
 # see: https://www.alphavantage.co/support/#api-key
