@@ -27,12 +27,16 @@ latest_day = dates[0]
 latest_close = tsd[latest_day]["4. close"]
 
 high_prices = []
+low_prices = []
 
 for date in dates:
     high_price = tsd[date]["2. high"]
     high_prices.append(float(high_price))
+    low_price = tsd[date]["3. low"]
+    low_prices.append(float(low_price))
 
 recent_high = max(high_prices)
+recent_low = min(low_prices)
 
 load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
 
@@ -58,7 +62,7 @@ print("-----------------")
 print(f"LATEST UPDATE: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
-print("RECENT LOW: $99,000.00")
+print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-----------------")
 print("RECOMMENDATION: Buy!")
 print("RECOMMENDATION REASON: Because the latest closing price is within threshold XYZ etc., etc. and this fits within your risk tolerance etc., etc.")
