@@ -13,7 +13,8 @@ response = requests.get(request_url)
 
 parsed_response = json.loads(response.text)
 
-breakpoint()
+last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+
 
 load_dotenv() # loads environment variables set in a ".env" file, including the value of the ALPHAVANTAGE_API_KEY variable
 
@@ -44,7 +45,7 @@ print("-----------------")
 print(f"STOCK SYMBOL: {symbol}")
 print("RUN AT: 11:52pm on June 5th, 2018")
 print("-----------------")
-print("LATEST DAY OF AVAILABLE DATA: June 4th, 2018")
+print(f"LATEST UPDATE: {last_refreshed}")
 print(f"LATEST DAILY CLOSING PRICE: {latest_price_usd}")
 print("RECENT HIGH: $101,000.00")
 print("RECENT LOW: $99,000.00")
