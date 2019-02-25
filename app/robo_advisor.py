@@ -11,8 +11,24 @@ load_dotenv()
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
 
-ticker_input = input('Please enter a valid Stock Symbol(ex. AMZN): ')
+while True:
+    try:
+        ticker_input = input('Please enter a valid Stock Symbol(ex. AMZN): ')
+        symbol = ticker_input
+        api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
+        request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={api_key}"
+        response = requests.get(request_url)
+        parsed_response = json.loads(response.text)
+        last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
+    except KeyError:
+        print("Sorry, that is not a valid stock symbol. Please try again!")
+        continue
+    else:
+        break
+
+#https://stackoverflow.com/questions/23294658/asking-the-user-for-input-until-they-give-a-valid-response
+#used this to get the try/except formatted
 
 symbol = ticker_input
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
@@ -23,6 +39,7 @@ response = requests.get(request_url)
 parsed_response = json.loads(response.text)
 
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+
 now = datetime.datetime.now()
 
 tsd = parsed_response["Time Series (Daily)"]
@@ -32,22 +49,19 @@ latest_close = tsd[latest_day]["4. close"]
 
 high_prices = []
 low_prices = []
+closing_prices = []
 
 for date in dates:
     high_price = tsd[date]["2. high"]
     high_prices.append(float(high_price))
     low_price = tsd[date]["3. low"]
     low_prices.append(float(low_price))
+    latest_close = tsd[date]["3. low"]
+    closing_prices.append(float(latest_close))
+
 
 recent_high = max(high_prices)
 recent_low = min(low_prices)
-
-
-#
-# INFO OUTPUTS
-#
-
-#csv_file_path = "data/prices.csv"
 
 csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
 
@@ -66,9 +80,6 @@ with open(csv_file_path, "w") as csv_file:
             "close": daily_prices["4. close"],
             "volume": daily_prices["5. volume"],
         })
-
-
-
 
 
 print("----------------------------------")
@@ -91,3 +102,14 @@ else:
 print("----------------------------------")
 print(f"WRITING DATA TO CSV: {csv_file_path}...")
 
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+import numpy as np
+
+plt.plot(dates, closing_prices)
+plt.ylabel('Closing Stock Prices (Dollars)') 
+formatter = ticker.FormatStrFormatter('$%1.2f')
+#plt.yaxis.set_major_formatter(formatter)
+plt.xlabel("Time")
+plt.title(f"Closing Stock Prices of {symbol}")
+plt.show()
